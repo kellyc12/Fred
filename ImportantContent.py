@@ -1,1 +1,3 @@
-token = "NjMzMzk1OTMzNjQ3NzMyNzY3.Xad70Q.CicZyPxCSaan-AYF4OCtvg0HmjI"
+token = "NjMzMzk1OTMzNjQ3NzMyNzY3.XajCBA.V6S4OQdMxKJnuOQjdXlgxvENXKU"
+guild_id= 633393472497254401
+general_id= 633393472497254403

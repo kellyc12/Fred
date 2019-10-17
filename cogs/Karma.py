@@ -13,7 +13,7 @@ class Karma(commands.Cog):
 
     # Add points
     @commands.command(name='add',
-                      description="Add's Stars to a member's Star Chart")
+                      description="Adds points to a user.")
     async def addpoints(self, ctx, num: int, member: discord.Member):
 
         user = member.display_name
@@ -33,7 +33,7 @@ class Karma(commands.Cog):
 
     # Subtract points to Karma
     @commands.command(name='sub',
-                        description="Subtracts Stars to a member's Star Chart")
+                        description="Subtracts points from a user.")
     async def subpoints(self, ctx, num: int, member: discord.Member):
         # Todo add something to check if username is valid
 
@@ -52,7 +52,7 @@ class Karma(commands.Cog):
         if isinstance(error, commands.BadArgument):
             await ctx.send('Sorry, I could not do that you are missing one or more arguments...')
 
-    @commands.command(name='ranking')
+    @commands.command(name='ranking', description= "Returns a list of people ranked by most points.")
     async def display_rank(self, ctx):
         ranks = sorted(karma, key=karma.get, reverse=True)
         msg = "Here are the rankings: \n"
