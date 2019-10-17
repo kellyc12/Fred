@@ -1,3 +1,0 @@
-token = "NjMzMzk1OTMzNjQ3NzMyNzY3.XajD7g.mKRl0T6o1fAMa3QML7unvlMR_vA"
-guild_id= 633393472497254401
-general_id= 633393472497254403
