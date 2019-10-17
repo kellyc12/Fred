@@ -18,8 +18,6 @@ status = cycle(['hello', 'twat', 'happy', 'sad'])
 # Lets us know that Fred is running
 @bot.event
 async def on_ready():
-    statusloop.start()
-    mention.start()
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
@@ -93,7 +91,9 @@ async def display_rank(ctx):
 # Example of background tasks.
 @tasks.loop(seconds=10)
 async def statusloop():
+    print('changing status')
     await bot.change_presence(activity=discord.Game(next(status)))
+
 
 
 # Say Hello
@@ -101,13 +101,21 @@ async def statusloop():
 async def helloworld(ctx):
     await ctx.send('Hello all {0.channel.mention}!'.format(ctx))
 
-@bot.command()
-async def hi(ctx):
-    await ctx.send("hi")
 
-@tasks.loop(seconds=10)
-async def mention():
-    await bot.command(hi)
+@bot.command(name = 'loop')
+async def loop(ctx):
+    await ctx.send("Loop beginning now!")
+
+# Invoke the loop :O
+@bot.event
+async def on_command(ctx):
+    com = ctx.command
+    print(com)
+    if com == loop:
+        statusloop.start()
+    else:
+        return
+
 
 # # Invoke Timer
 # @bot.command(name="timer")
