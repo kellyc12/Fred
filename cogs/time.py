@@ -28,9 +28,10 @@ class Time(commands.Cog):
         guild = discord.Client.get_guild(self.client, ImportantContent.guild_id)
         channel = discord.Client.get_channel(self.client, ImportantContent.general_id)
         ping = discord.utils.get(guild.roles, name='Get Pinged')
+        watcher = discord.utils.get(guild.roles, name='Watcher')
         if (guild is not None) and (channel is not None) and (ping is not None):
             print("everything found")
-            await channel.send("Ping! {0.mention}".format(ping))
+            await channel.send("EOT WARNING! EOT WARNING! PING! {0.mention} {1.mention}".format(ping, watcher))
         else:
             print("something is missing")
 
@@ -84,7 +85,7 @@ class Time(commands.Cog):
     async def set_timer(self, ctx, dur: int):
         self.timed_loop.cancel()
         self.timed_loop.change_interval(minutes= dur)
-        await ctx.send("Time interval changed to {0} seconds".format(dur))
+        await ctx.send("Time interval changed to {0} minutes".format(dur))
 
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):

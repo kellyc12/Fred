@@ -33,4 +33,25 @@ async def helloworld(ctx):
     await ctx.send('Hello all {0.channel.mention}!'.format(ctx))
 
 
+@client.command(name= "fred", description= 'A little summary of function.')
+async def fred_intro(ctx):
+    msg = 'Hello {0.author.mention}! How are you? I am here to tell you a little bit about myself! \n' \
+          'You can find out about my available commands by typing !help and also !help [specific command] will give you the details about that specific command \n' \
+          '\n' \
+          'Here is just a short run down of commands for your convenience: \n' \
+          '     I.Karma type commands: \n' \
+          '             -Add, sub, rankings. These commands help keep track of "Karma" points which is basically a fancy way of saying we praised you. \n' \
+          '     II.Time type commands: \n' \
+          '             -remind, remove, t/o, timer. These commands will allow you to enroll in the FredBot Eot reminders.' \
+          '\n' \
+          'Limitations: This bot will only be online when Laeyo is actively at a computer running the bot. If the bot shows as offline it will not function. \n' \
+          '\n' \
+          'If you have any questions or suggestions or functions you would like added please let me know! Happy to utilize my brain sometimes.' \
+          '\n' \
+          '\n' \
+          'Best, \n' \
+          '     Fred'
+    await ctx.send(msg.format(ctx))
+
+
 client.run(ImportantContent.token)
