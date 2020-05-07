@@ -34,6 +34,7 @@ async def helloworld(ctx):
 
 
 @client.command(name= "fred", description= 'A little summary of function.')
+# TODO: Fix the formatting.
 async def fred_intro(ctx):
     msg = 'Hello {0.author.mention}! How are you? I am here to tell you a little bit about myself! \n' \
           'You can find out about my available commands by typing !help and also !help [specific command] will give you the details about that specific command \n' \

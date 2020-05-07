@@ -3,8 +3,22 @@ from discord.ext import commands, tasks
 import asyncio
 from itertools import cycle
 import ImportantContent
+import random
 
 status = cycle(['hello', 'twat', 'happy', 'sad'])
+
+list = ['EOT WARNING! EOT WARNING! PING!', 'Maybe check the game... I dont care...', 'Blood for the blood god!!',
+        'Build em up and knock em downn!', 'Mew Waz Ere', 'Here',
+        'Here I am, brain the size of a planet... and you ask me to remind you about EOT.....',
+        'Purple alert Purple alert!',
+        'Call it extreme if you like, but I propose we hit it hard and hit it fast with a major - and I mean major - leaflet campaign.',
+        'Howdily doodily do. I am Fred your chirpy BD companion.',
+        'Don’t you think I’d love to be deceitful, unpleasant and offensive? Those are the human qualities I admire the most...',
+        'I say they over there appear to be trying to kill us! Shall we have at them?',
+        'Before this EOT, dont forget to do the right thing and turn missiles/nukes back on.']
+
+random.shuffle(list)
+phrases = cycle(list)
 
 gid = ImportantContent.guild_id
 
@@ -19,8 +33,8 @@ class Time(commands.Cog):
     # Example of background tasks.
     @tasks.loop(seconds=10)
     async def statusloop(self):
-        print('changing status')
-        await self.client.change_presence(activity=discord.Game(next(status)))
+        print('test phrase change')
+        await self.client.change_presence(activity=discord.Game(next(phrases)))
 
     # trying my own
     @tasks.loop(minutes=60)
@@ -31,9 +45,12 @@ class Time(commands.Cog):
         watcher = discord.utils.get(guild.roles, name='Watcher')
         if (guild is not None) and (channel is not None) and (ping is not None):
             print("everything found")
-            await channel.send("EOT WARNING! EOT WARNING! PING! {0.mention} {1.mention}".format(ping, watcher))
+            string = next(phrases) + ' {0.mention} {1.mention}'.format(ping, watcher)
+            await channel.send(string)
         else:
             print("something is missing")
+
+
 
     # Start Command
     @commands.command(name='loop', description = "Starts a loop that changes the bot status")
@@ -86,6 +103,33 @@ class Time(commands.Cog):
         self.timed_loop.cancel()
         self.timed_loop.change_interval(minutes= dur)
         await ctx.send("Time interval changed to {0} minutes".format(dur))
+
+    # Command to add a phrase to Fred's list of phrases for EOT Warnings
+    @commands.command(name ='addphrase', description = "Adds a phrase to Fred's list of phrases for EOT warnings.")
+    async def add_phrase (self, ctx, string : str):
+        list.append(string)
+        global phrases
+        random.shuffle(list)
+        print(list)
+        phrases = cycle(list)
+        await ctx.send("Phrase added")
+
+    @commands.command(name = 'showphrase', description = "Displays Fred's phrases.")
+    async def show_phrase (self, ctx):
+        text = ""
+        for x in range(len(list)):
+            line = str(x+1)+ ': ' + list[x] + '\n'
+            text = text + line
+        await ctx.send(text)
+
+    @commands.command(name = "deletephrase", description = "Deletes a phrase from the list using the position of the phrase in the list")
+    async def delete_phrase (self, ctx, index: int):
+        text = list[index-1]
+        list.remove(text)
+        global phrases
+        random.shuffle(list)
+        phrases = cycle(list)
+        await ctx.send('Removed phrase')
 
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):
