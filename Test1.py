@@ -117,15 +117,5 @@ async def on_command(ctx):
         return
 
 
-# # Invoke Timer
-# @bot.command(name="timer")
-# async def timer(ctx):
-#     await mention.start()
-
-
-
-# @bot.command(name= "test")
-# async def tester (ctx, member: discord.Member):
-#     await ctx.send("{0.mention} is the hottest person here".format(member))
 
 bot.run(ImportantContent.token)

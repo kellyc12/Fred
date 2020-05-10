@@ -65,12 +65,5 @@ class Karma(commands.Cog):
 
         await ctx.send(msg)
 
-    @commands.command(name='leo')
-    async def leo(self, ctx):
-        role = discord.utils.get(ctx.guild.roles, name='The Volcanologist')
-        member = ctx.author
-        await discord.Member.remove_roles(member, role)
-        await ctx.send('{0.author.mention} added to the remind list'.format(ctx))
-
 def setup(client):
     client.add_cog(Karma(client))

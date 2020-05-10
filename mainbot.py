@@ -3,7 +3,8 @@ import os
 from discord.ext import commands
 import ImportantContent
 
-client = commands.Bot(command_prefix='!')
+
+client = commands.Bot(command_prefix='!', case_insensitive=True)
 
 
 @client.command()
@@ -25,6 +26,12 @@ async def reload(ctx, extension):
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
+
+@client.command()
+async def off(ctx):
+    print("Bot Off")
+    await ctx.send("Shutting down... its getting so dark...")
+    await client.logout()
 
 
 # Say Hello

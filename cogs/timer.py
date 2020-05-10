@@ -4,26 +4,63 @@ import asyncio
 from itertools import cycle
 import ImportantContent
 import random
+import datetime
 
 status = cycle(['hello', 'twat', 'happy', 'sad'])
 
-list = ['EOT WARNING! EOT WARNING! PING!', 'Maybe check the game... I dont care...', 'Blood for the blood god!!',
-        'Build em up and knock em downn!', 'Mew Waz Ere', 'Here',
-        'Here I am, brain the size of a planet... and you ask me to remind you about EOT.....',
-        'Purple alert Purple alert!',
-        'Call it extreme if you like, but I propose we hit it hard and hit it fast with a major - and I mean major - leaflet campaign.',
-        'Howdily doodily do. I am Fred your chirpy BD companion.',
-        'Don’t you think I’d love to be deceitful, unpleasant and offensive? Those are the human qualities I admire the most...',
-        'I say they over there appear to be trying to kill us! Shall we have at them?',
-        'Before this EOT, dont forget to do the right thing and turn missiles/nukes back on.']
+plist = []
 
-random.shuffle(list)
-phrases = cycle(list)
+random.shuffle(plist)
+phrases = cycle(plist)
 
 gid = ImportantContent.guild_id
 
+#global to hold the minute for ping # default 50
+remind_min = 50
 
-class Time(commands.Cog):
+# loop state set to
+stateOfLoop = False
+
+# helper function
+def checktimer(min):
+    tnow = datetime.datetime.now()
+    tsett = tnow.replace(minute= min)
+    diff = (tsett - tnow).total_seconds()/60
+    if diff < 0:
+        tsett = tsett.replace(hour = tsett.hour + 1)
+        diff = (tsett - tnow).total_seconds()/60
+    print ("this is the difference:", diff)
+    return diff
+
+def checkwithinloop(min):
+    tnow = datetime.datetime.now()
+    tsett = tnow.replace(hour = tnow.hour +1 , minute = min)
+    diff = (tsett - tnow).total_seconds()/60
+    print("This is the difference now:", diff)
+    return diff
+
+# helper function to write out the list or read in the list
+
+def writeList ():
+    outfile = open('phrase.txt', "w")
+    for x in plist:
+        outfile.write(x + '\n')
+    outfile.close()
+    return
+
+def readList ():
+    infile = open('phrase.txt', "r")
+    lines = infile.readlines()
+    for line in lines:
+        plist.append(line[:-1])
+    infile.close()
+
+readList()
+print("check list:", plist)
+
+
+
+class Timer(commands.Cog):
 
     def __init__(self, client):
         self.client = client
@@ -43,12 +80,22 @@ class Time(commands.Cog):
         channel = discord.Client.get_channel(self.client, ImportantContent.general_id)
         ping = discord.utils.get(guild.roles, name='Get Pinged')
         watcher = discord.utils.get(guild.roles, name='Watcher')
+        global stateOfLoop
+        # check time if the state is True
+        if stateOfLoop:
+            dur = checkwithinloop(remind_min)
+            print("interval is", dur)
+            self.timed_loop.change_interval(minutes=dur)
+
         if (guild is not None) and (channel is not None) and (ping is not None):
             print("everything found")
-            string = next(phrases) + ' {0.mention} {1.mention}'.format(ping, watcher)
-            await channel.send(string)
+            # string = next(phrases) + ' {0.mention} {1.mention}'.format(ping, watcher)
+
+            stateOfLoop = True
+            await channel.send("pretend ping")
         else:
             print("something is missing")
+
 
 
 
@@ -59,7 +106,9 @@ class Time(commands.Cog):
 
     # Start Command for timer
     @commands.command(name='timer', description = "Start the timer. Default time 60 min.")
-    async def timer(self, ctx):
+    async def timer(self, ctx, min = 50):
+        global remind_min
+        remind_min = min
         await ctx.send("Timer beginning now!")
 
     # Stop Command for timer
@@ -75,6 +124,8 @@ class Time(commands.Cog):
         if com == self.loop:
             self.statusloop.start()
         elif com == self.timer:
+            dur = checktimer(remind_min)
+            self.timed_loop.change_interval(minutes=dur)
             self.timed_loop.start()
         elif com == self.timer_off:
             self.timed_loop.cancel()
@@ -107,28 +158,28 @@ class Time(commands.Cog):
     # Command to add a phrase to Fred's list of phrases for EOT Warnings
     @commands.command(name ='addphrase', description = "Adds a phrase to Fred's list of phrases for EOT warnings.")
     async def add_phrase (self, ctx, string : str):
-        list.append(string)
+        plist.append(string)
         global phrases
-        random.shuffle(list)
-        print(list)
-        phrases = cycle(list)
+        random.shuffle(plist)
+        print(plist)
+        phrases = cycle(plist)
         await ctx.send("Phrase added")
 
     @commands.command(name = 'showphrase', description = "Displays Fred's phrases.")
     async def show_phrase (self, ctx):
         text = ""
-        for x in range(len(list)):
-            line = str(x+1)+ ': ' + list[x] + '\n'
+        for x in range(len(plist)):
+            line = str(x+1)+ ': ' + plist[x] + '\n'
             text = text + line
         await ctx.send(text)
 
     @commands.command(name = "deletephrase", description = "Deletes a phrase from the list using the position of the phrase in the list")
     async def delete_phrase (self, ctx, index: int):
-        text = list[index-1]
-        list.remove(text)
+        text = plist[index-1]
+        plist.remove(text)
         global phrases
-        random.shuffle(list)
-        phrases = cycle(list)
+        random.shuffle(plist)
+        phrases = cycle(plist)
         await ctx.send('Removed phrase')
 
     @commands.Cog.listener()
@@ -137,14 +188,13 @@ class Time(commands.Cog):
         if com == self.set_timer:
             self.timed_loop.start()
 
-    # # trying something
-    # @commands.command(name='timer')
-    # async def timer(self, ctx, dur: int):
-    #     while self.client
-    #         print('switch on...')
-    #         await asyncio.sleep(dur)
-    #         await ctx.send("beep")
+    # unload behavior?
+    def cog_unload(self):
+        print("cog unload behavior success")
 
 
 def setup(client):
-    client.add_cog(Time(client))
+    client.add_cog(Timer(client))
+
+
+
