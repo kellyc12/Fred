@@ -22,6 +22,8 @@ remind_min = 50
 stateOfLoop = False
 
 # helper function
+
+
 def checktimer(min):
     tnow = datetime.datetime.now()
     tsett = tnow.replace(minute= min)
@@ -32,6 +34,7 @@ def checktimer(min):
     print ("this is the difference:", diff)
     return diff
 
+
 def checkwithinloop(min):
     tnow = datetime.datetime.now()
     tsett = tnow.replace(hour = tnow.hour +1 , minute = min)
@@ -41,31 +44,36 @@ def checkwithinloop(min):
 
 # helper function to write out the list or read in the list
 
+
 def writeList ():
-    outfile = open('phrase.txt', "w")
+    outfile = open('/Users/kc97/PycharmProjects/DiscordBot/Fred/cogs/phrase', "w")
     for x in plist:
         outfile.write(x + '\n')
     outfile.close()
     return
 
+
 def readList ():
-    infile = open('phrase.txt', "r")
+    infile = open('/Users/kc97/PycharmProjects/DiscordBot/Fred/cogs/phrase', "r")
     lines = infile.readlines()
-    for line in lines:
-        plist.append(line[:-1])
-    infile.close()
-
-readList()
-print("check list:", plist)
-
+    if not (lines):
+        infile.close()
+        newfile = open('/Users/kc97/PycharmProjects/DiscordBot/Fred/cogs/phrase_backup', "r")
+        lines = newfile.readlines()
+        for line in lines:
+            plist.append(line[:-1])
+        newfile.close()
+    else:
+        for line in lines:
+            plist.append(line[:-1])
+        infile.close()
+    return
 
 
 class Timer(commands.Cog):
 
     def __init__(self, client):
         self.client = client
-
-
 
     # Example of background tasks.
     @tasks.loop(seconds=10)
@@ -92,7 +100,7 @@ class Timer(commands.Cog):
             # string = next(phrases) + ' {0.mention} {1.mention}'.format(ping, watcher)
 
             stateOfLoop = True
-            await channel.send("pretend ping")
+            await channel.send(next(phrases))
         else:
             print("something is missing")
 
@@ -190,10 +198,12 @@ class Timer(commands.Cog):
 
     # unload behavior?
     def cog_unload(self):
+        writeList()
         print("cog unload behavior success")
 
 
 def setup(client):
+    readList()
     client.add_cog(Timer(client))
 
 
