@@ -43,22 +43,14 @@ async def helloworld(ctx):
 @client.command(name= "fred", description= 'A little summary of function.')
 # TODO: Fix the formatting.
 async def fred_intro(ctx):
-    msg = 'Hello {0.author.mention}! How are you? I am here to tell you a little bit about myself! \n' \
-          'You can find out about my available commands by typing !help and also !help [specific command] will give you the details about that specific command \n' \
-          '\n' \
-          'Here is just a short run down of commands for your convenience: \n' \
-          '     I.Karma type commands: \n' \
-          '             -Add, sub, rankings. These commands help keep track of "Karma" points which is basically a fancy way of saying we praised you. \n' \
-          '     II.Time type commands: \n' \
-          '             -remind, remove, t/o, timer. These commands will allow you to enroll in the FredBot Eot reminders.' \
-          '\n' \
-          'Limitations: This bot will only be online when Laeyo is actively at a computer running the bot. If the bot shows as offline it will not function. \n' \
-          '\n' \
-          'If you have any questions or suggestions or functions you would like added please let me know! Happy to utilize my brain sometimes.' \
-          '\n' \
-          '\n' \
-          'Best, \n' \
-          '     Fred'
+    msg = 'Hello {0.author.mention}! How are you? I am here to tell you a little bit about myself! \n\n' \
+          '\tYou can find out about my available commands by typing !help and also !help [specific command] will give you the details about that specific command \n\n' \
+          'Latest updates: \n\n' \
+          '\t - You can now use !timer to set the timer at any point and it will ping at next eot (:50). If you want a specific ping time it can be set by !timer [minute] \n' \
+          '\t - Phrases will now save if the bot turns off and re-read them back after the bot turns back on.\n'\
+          '\t - Did someone say memes? Coming up next is the jokes module for Fred! \n\n' \
+          '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t Best,\n'\
+          '\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t Fred'
     await ctx.send(msg.format(ctx))
 
 
